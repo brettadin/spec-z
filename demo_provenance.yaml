@@ -1,0 +1,20 @@
+metadata:
+  file_format: csv
+  source_file: earth_spectrum.csv
+provenance:
+- details:
+    timestamp: '2025-10-29T05:55:33.629055'
+  operation: created
+  timestamp: '2025-10-29T05:55:33.629060'
+- details:
+    timestamp: '2025-10-29T05:55:33.629923'
+  operation: created
+  timestamp: '2025-10-29T05:55:33.629926'
+- details:
+    method: peak
+    norm_factor: 0.7537739
+    range_max: null
+    range_min: null
+  operation: normalization
+  timestamp: '2025-10-29T05:55:33.629930'
+spectrum_name: earth_spectrum

@@ -1,0 +1,13 @@
+# Spectrum: Fe I
+# Wavelength unit: nm
+# Flux unit: relative
+# source: NIST Atomic Spectra Database (example data)
+# element: Fe
+# spectrum_type: I
+#
+Wavelength (nm),Flux (relative)
+438.4,1.0
+440.5,0.8
+466.8,0.6
+495.8,0.5
+526.9,0.7

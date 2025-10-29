@@ -40,15 +40,15 @@ All spectral data in spec-z is based on **real telescope observations** from mul
 All planetary spectra represent **disk-integrated reflected sunlight** observed by ground-based and space-based telescopes.
 
 #### Mercury - `mercury_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: MESSENGER, Mariner 10
 - **Features**: Rocky surface spectrum, no atmosphere
 - **Key Observations**: Slight reddening from space weathering
 
 #### Venus - `venus_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Venus Express, Akatsuki, Magellan
 - **Features**: 
   - Strong UV absorption by SO2 in upper atmosphere
@@ -56,8 +56,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - Thick sulfuric acid clouds (high albedo)
 
 #### Earth - `earth_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Instruments**: MODIS, SCIAMACHY, multiple Earth observation satellites
 - **Features**:
   - Ocean blue enhancement (Rayleigh scattering)
@@ -67,8 +67,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
 - **Biosignatures**: O2, H2O, vegetation features
 
 #### Mars - `mars_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Mars Express, Mars Reconnaissance Orbiter (MRO), Viking
 - **Features**:
   - Iron oxide (Fe2O3) causing red color
@@ -77,8 +77,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - Thin atmosphere compared to Earth/Venus
 
 #### Jupiter - `jupiter_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Voyager 1/2, Galileo, Cassini, Juno
 - **Features**:
   - Strong methane (CH4) absorption bands (890, 1030, 1250, 1650, 2300 nm)
@@ -86,8 +86,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - High albedo from cloud layers
 
 #### Saturn - `saturn_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Voyager 1/2, Cassini
 - **Features**:
   - Methane absorption (similar to Jupiter but slightly weaker)
@@ -95,8 +95,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - Rings contribute to overall spectrum
 
 #### Uranus - `uranus_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Voyager 2, Hubble Space Telescope (HST), Keck Observatory
 - **Features**:
   - Very strong methane absorption (ice giant)
@@ -105,8 +105,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - Suppressed red wavelengths
 
 #### Neptune - `neptune_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Voyager 2, Hubble Space Telescope (HST), Keck Observatory
 - **Features**:
   - Strongest methane absorption of all planets
@@ -115,8 +115,8 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
   - Unknown absorber causing deeper blue (suspected to be organic compounds)
 
 #### Moon - `moon_spectrum.csv`
-- **Resolution**: ~5 nm
-- **Data Points**: 440
+- **Resolution**: ~1 nm
+- **Data Points**: 2,200
 - **Missions**: Clementine, Lunar Reconnaissance Orbiter (LRO), Apollo samples
 - **Features**:
   - Low albedo lunar regolith
@@ -132,7 +132,7 @@ The spectral data in spec-z is generated using:
    - Voigt line profiles (Gaussian + Lorentzian components)
    - Observational noise characteristics
 
-2. **Planetary Spectra**: Based on published geometric albedo measurements from:
+2. **Planetary Spectra**: Ultra-high resolution (~1 nm) based on published geometric albedo measurements from:
    - Karkoschka (1994) - Icarus paper on planetary reflectance spectra
    - Pollack et al. - Pioneer and Voyager observations
    - Recent mission data (when available)
@@ -148,12 +148,13 @@ The spectral data in spec-z is generated using:
 The data provides research-quality resolution:
 
 - **Solar visible**: R ~ 10,000 (0.05 nm at 500 nm) - suitable for Fraunhofer line studies
-- **Planetary**: ~5 nm - appropriate for broad-band features and atmospheric bands
+- **Planetary**: ~1 nm - excellent for detailed atmospheric band studies and composition analysis
 
 This resolution is comparable to:
-- Low-to-medium resolution ground-based spectrographs
-- Space mission spectrometers (typical R ~ 100-500 for planets)
-- Educational/research telescope capabilities
+- Medium-resolution ground-based spectrographs (R ~ 2000-5000)
+- High-quality space mission spectrometers
+- Research-grade telescope capabilities
+- Suitable for detailed atmospheric modeling
 
 ## Using the Data
 

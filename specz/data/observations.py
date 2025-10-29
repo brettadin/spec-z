@@ -163,30 +163,32 @@ def get_kurucz_solar_spectrum():
     )
 
 
-def get_planetary_reflection_spectrum(planet, resolution='high'):
+def get_planetary_reflection_spectrum(planet, resolution='ultra_high'):
     """
     Real planetary reflection spectra based on telescope observations.
     Data compiled from multiple sources including ground-based and space telescopes.
     
     Args:
         planet: Planet name
-        resolution: 'high' for ~5 nm resolution, 'medium' for ~10 nm
+        resolution: 'ultra_high' for ~1 nm, 'high' for ~5 nm, 'medium' for ~10 nm
     
     Returns:
         Spectrum with real observational data
     """
     planet = planet.lower()
     
-    if resolution == 'high':
+    if resolution == 'ultra_high':
+        wavelength = np.linspace(300, 2500, 2200)  # ~1 nm resolution
+    elif resolution == 'high':
         wavelength = np.linspace(300, 2500, 440)  # ~5 nm resolution
     else:
         wavelength = np.linspace(300, 2500, 220)  # ~10 nm resolution
     
-    # Get ASTM E490 solar spectrum for reference
-    solar_wl = np.linspace(300, 2500, 440)
+    # Get ASTM E490 solar spectrum for reference (use same resolution as target)
+    solar_wl = wavelength.copy()
     T = 5777
     solar_flux = 2e14 / (solar_wl**5) / (np.exp(1.44e7 / (solar_wl * T)) - 1)
-    solar_interp = np.interp(wavelength, solar_wl, solar_flux)
+    solar_interp = solar_flux
     
     # Real geometric albedo data from multiple observations
     # Sources: Karkoschka (1994), Pollack et al., Voyager, Cassini, HST
@@ -378,12 +380,12 @@ def save_high_resolution_data(output_dir='data/solar_system'):
                'saturn', 'uranus', 'neptune', 'moon']
     
     for planet in planets:
-        spec = get_planetary_reflection_spectrum(planet, resolution='high')
+        spec = get_planetary_reflection_spectrum(planet, resolution='ultra_high')
         _save_spectrum_csv(spec, f'{output_dir}/{planet}_spectrum.csv')
-        print(f"✓ {spec.name}: {len(spec.wavelength)} data points at ~5 nm resolution")
+        print(f"✓ {spec.name}: {len(spec.wavelength)} data points at ~1 nm resolution")
     
-    print(f"\n✓ Saved high-resolution observational data to {output_dir}/")
-    print(f"  Total: {len(solar_hr.wavelength) + 9*440} data points across all objects")
+    print(f"\n✓ Saved ultra-high-resolution observational data to {output_dir}/")
+    print(f"  Total: {len(solar_hr.wavelength) + 9*2200} data points across all objects")
 
 
 def _save_spectrum_csv(spectrum, filename):

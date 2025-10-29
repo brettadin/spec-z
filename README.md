@@ -1,6 +1,22 @@
 # spec-z: Spectral Analysis Platform
 
-A standalone Python library for ingesting, visualizing, and analyzing lab, stellar, and planetary spectra.
+A standalone Python platform for spectral analysis with desktop GUI, providing tools for ingesting, visualizing, and analyzing spectroscopic data.
+
+## ⚠️ Important Note on Included Data
+
+The solar system spectral data included with spec-z is **synthesized/modeled for educational purposes**, not raw telescope observations. It's based on published physical parameters and observations but generated using spectroscopic models. See [DATA_SOURCES.md](DATA_SOURCES.md) for details.
+
+**For real mission data**, access: NASA PDS, ESA PSA, MAST, or mission-specific archives.
+
+**This synthesized data is suitable for:**
+- ✓ Teaching spectroscopy principles
+- ✓ Algorithm development and testing
+- ✓ Software prototyping
+- ✓ Learning spectral analysis techniques
+
+**Not suitable for:**
+- ✗ Original scientific research publication
+- ✗ Precise measurements or modeling
 
 ## Features
 

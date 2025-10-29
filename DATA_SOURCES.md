@@ -1,10 +1,51 @@
 # Solar System Observational Data
 
-This document describes the high-resolution observational spectral data included in spec-z.
+This document describes the high-resolution spectral data included in spec-z.
+
+## Important: Data Nature and Usage
+
+The spectral data in spec-z is **synthesized/modeled based on real observations and published parameters**. It is NOT raw telescope data files from mission archives.
+
+### What This Means:
+
+**Data is Based On:**
+- Real spectral line positions from published atlases (NSO, KPNO, Kurucz)
+- Published geometric albedo measurements (Karkoschka 1994, mission papers)
+- Actual absorption band wavelengths from HITRAN database
+- Physical parameters from observations (temperatures, compositions)
+
+**Data is Generated Using:**
+- Planck function for continuum radiation
+- Voigt profiles for absorption lines (matching observed line shapes)
+- Gaussian/Lorentzian functions for atmospheric absorption bands
+- Calibrated line depths and widths from published measurements
+- Added observational noise to simulate real telescope data
+
+### Appropriate Use Cases:
+
+✓ **Educational demonstrations** - Teaching spectroscopy principles
+✓ **Algorithm development** - Testing data analysis pipelines
+✓ **Comparative studies** - Understanding planetary differences
+✓ **Feature identification** - Learning to recognize spectral signatures
+✓ **Software testing** - Developing spectroscopic analysis tools
+✓ **Prototyping** - Building spectroscopy applications
+
+### NOT Appropriate For:
+
+✗ Publishing original scientific research results
+✗ Precise measurements (radial velocities, abundances)
+✗ Cutting-edge atmospheric modeling requiring real data
+✗ Mission planning requiring actual observational constraints
+
+### For Real Telescope Data:
+
+If you need actual raw observational data, access:
+- **NASA Planetary Data System (PDS)** - Mission data archives
+- **ESA Planetary Science Archive (PSA)** - European mission data
+- **MAST** - Hubble and other space telescope archives
+- **Mission websites** - Direct from Voyager, Cassini, Mars Express, etc.
 
 ## Data Quality and Sources
-
-All spectral data in spec-z is based on **real telescope observations** from multiple missions and observatories. The data represents actual measurements, not purely synthetic models.
 
 ### Solar Spectra
 
@@ -125,23 +166,42 @@ All planetary spectra represent **disk-integrated reflected sunlight** observed 
 
 ## Data Generation Method
 
-The spectral data in spec-z is generated using:
+The spectral data in spec-z is **synthesized using physical models calibrated to real observations**:
 
-1. **Solar Spectra**: Based on Kurucz solar atlas and ASTM standards, incorporating:
-   - Real Fraunhofer line positions from NSO catalogs
-   - Voigt line profiles (Gaussian + Lorentzian components)
+1. **Solar Spectra**: Modeled using:
+   - Planck blackbody radiation (T=5777 K) for continuum
+   - Real Fraunhofer line positions from NSO/Kurucz catalogs
+   - Voigt line profiles (Gaussian + Lorentzian components) matching observed line shapes
+   - Line depths calibrated to published solar atlases
    - Observational noise characteristics
 
-2. **Planetary Spectra**: Ultra-high resolution (~1 nm) based on published geometric albedo measurements from:
-   - Karkoschka (1994) - Icarus paper on planetary reflectance spectra
-   - Pollack et al. - Pioneer and Voyager observations
-   - Recent mission data (when available)
-   - Ground-based spectroscopy campaigns
+2. **Planetary Spectra**: Ultra-high resolution (~1 nm) modeled using:
+   - Published geometric albedo values (Karkoschka 1994, mission papers)
+   - Solar illumination spectrum (Planck function)
+   - Atmospheric absorption features from HITRAN database
+   - Band depths calibrated to mission spectrometer measurements
+   - Surface reflection properties from observations
 
-3. **Atmospheric Features**: Real absorption band positions and depths from:
-   - HITRAN database for molecular spectroscopy
-   - Mission spectrometers (VIRTIS, VIMS, etc.)
-   - Laboratory measurements
+3. **Atmospheric Features**: Calibrated to real measurements:
+   - HITRAN database for molecular line positions and strengths
+   - Mission spectrometers (VIRTIS, VIMS, etc.) for band shapes
+   - Laboratory measurements for absorption cross-sections
+
+### Why Synthesized Data?
+
+- **Educational Value**: Clean, consistent data for teaching
+- **Accessibility**: No need for mission data archive access
+- **Completeness**: All solar system objects in one place
+- **Consistency**: Same wavelength grid and units across all spectra
+- **Realistic**: Includes key features and observational noise
+
+### Validation:
+
+The synthesized spectra have been validated to reproduce:
+- Correct spectral line positions (within instrument resolution)
+- Realistic band depths and shapes
+- Appropriate planet colors and albedos
+- Expected atmospheric absorption features
 
 ## Spectral Resolution
 
@@ -195,19 +255,39 @@ print(f"Shows O2, H2O, and vegetation features")
 
 ## Notes on Data Fidelity
 
-While the data is based on real observations and published measurements:
+**Important**: This is synthesized/modeled data, not raw telescope observations.
 
-1. **Solar spectrum**: Uses actual line positions and strengths, with Voigt profiles matching observed broadening
-2. **Planetary spectra**: Geometric albedos are from published papers; atmospheric features match mission spectrometer measurements
-3. **Resolution**: Appropriate for the science cases (line identification, atmospheric features, colors)
-4. **Noise**: Small observational noise added to simulate real telescope data
+**What's Accurate:**
+1. **Spectral line positions**: From published atlases and catalogs
+2. **Absorption band wavelengths**: From HITRAN and mission measurements
+3. **Geometric albedos**: From peer-reviewed papers
+4. **Physical principles**: Planck radiation, Beer-Lambert absorption
 
-The data is suitable for:
-- ✓ Educational demonstrations
+**What's Approximated:**
+1. **Line profiles**: Voigt approximations, not full radiative transfer
+2. **Atmospheric structure**: Simplified absorption models
+3. **Surface properties**: Average values, not spatially resolved
+4. **Temporal variations**: Static snapshots, no time dependence
+
+**Appropriate Uses:**
+- ✓ Educational demonstrations and teaching
 - ✓ Comparative planetology studies
-- ✓ Spectral feature identification
+- ✓ Spectral feature identification training
 - ✓ Algorithm development and testing
-- ✓ Atmospheric composition studies
-- ✓ Teaching spectroscopy principles
+- ✓ Software prototyping and validation
+- ✓ Understanding spectroscopic principles
 
-For cutting-edge research requiring higher precision, users should access raw mission data from NASA PDS or ESA PSA archives.
+**Not Appropriate For:**
+- ✗ Publishing original science results
+- ✗ Precise abundance determinations
+- ✗ Detailed atmospheric retrievals
+- ✗ Mission planning requiring real data constraints
+
+**For Real Observational Data:**
+
+Access mission archives for actual telescope data:
+- **NASA PDS** (pds.nasa.gov) - Planetary mission archives
+- **ESA PSA** (archives.esac.esa.int) - European mission data
+- **MAST** (archive.stsci.edu) - Hubble and space telescope data
+- **VizieR** (vizier.u-strasbg.fr) - Published astronomical catalogs
+- Individual mission websites (Voyager, Cassini, Mars Express, etc.)

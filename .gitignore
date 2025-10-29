@@ -44,8 +44,7 @@ data/*.dat
 # Generated outputs
 *.html
 *.png
-!data/solar_system/images/*.png
-!data/*/images/*.png
+!data/*/*.png
 demo_*.csv
 demo_*.yaml
 demo_*.fits

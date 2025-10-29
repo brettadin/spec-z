@@ -39,6 +39,12 @@ data/*.csv
 data/*.fits
 data/*.dat
 !data/examples/
+!data/solar_system/
+
+# Generated outputs
+*.html
+*.png
+!data/solar_system/images/*.png
 
 # Logs
 *.log

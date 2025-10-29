@@ -39,33 +39,44 @@ pip install -r requirements.txt
 
 ## Quick Start
 
+### Desktop GUI Application
+
+The easiest way to get started:
+
+```bash
+python gui.py
+```
+
+Then use `File → Load Solar System Data` to load any celestial object!
+
 ### As a Python Library
 
 ```python
-from specz import Spectrum, load_spectrum
-from specz.operations import subtract_spectra, normalize_spectrum
+from specz import load_spectrum
+from specz.data.registry import get_spectrum_path
+from specz.operations import normalize_spectrum
 from specz.visualization import plot_spectrum, compare_spectra
 
-# Load a spectrum
-spec = load_spectrum('data/my_spectrum.csv')
+# Load a solar system spectrum using the registry
+earth = load_spectrum(get_spectrum_path('Earth'))
+mars = load_spectrum(get_spectrum_path('Mars'))
 
 # Normalize and visualize
-normalized = normalize_spectrum(spec)
-plot_spectrum(normalized, title='My Normalized Spectrum')
+earth_norm = normalize_spectrum(earth)
+plot_spectrum(earth_norm, title='Earth Spectrum (Normalized)')
 
-# Compare two spectra
-spec2 = load_spectrum('data/reference.csv')
-compare_spectra([spec, spec2], labels=['Sample', 'Reference'])
+# Compare spectra
+compare_spectra([earth, mars], labels=['Earth', 'Mars'])
 ```
 
 ### Command-Line Interface
 
 ```bash
 # Plot a spectrum
-specz plot data/spectrum.csv --output plot.html
+python cli.py plot data/Earth/spectrum.csv --output earth_plot.html
 
 # Compare spectra
-specz compare data/spec1.csv data/spec2.csv --labels "Sample,Reference"
+python cli.py compare data/Earth/spectrum.csv data/Mars/spectrum.csv
 
 # Perform operations
 specz subtract data/spectrum.csv data/background.csv --output result.csv
@@ -78,6 +89,33 @@ specz fetch nist --element Fe --output fe_lines.csv
 ```
 
 ## Usage
+
+### Data Organization
+
+spec-z organizes data by celestial object for easy access:
+
+```
+data/
+├── Sun/           # Solar spectra and images
+├── Earth/         # Earth spectrum and image
+├── Mars/          # Mars spectrum and image
+... (all planets + Moon)
+```
+
+Access data programmatically using the registry:
+
+```python
+from specz.data.registry import get_spectrum_path, list_objects
+
+# List available objects
+print(list_objects())  # ['Sun', 'Mercury', 'Venus', 'Earth', ...]
+
+# Get paths and load
+from specz import load_spectrum
+earth = load_spectrum(get_spectrum_path('Earth'))
+```
+
+See [STRUCTURE.md](STRUCTURE.md) for complete project organization details.
 
 ### Loading Spectra
 

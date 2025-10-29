@@ -8,6 +8,7 @@ import sys
 import os
 import numpy as np
 from pathlib import Path
+from PIL import Image, ImageTk
 
 # Add parent directory to path to import specz
 sys.path.insert(0, str(Path(__file__).parent))
@@ -53,6 +54,26 @@ class SpecZGUI:
         menubar.add_cascade(label="File", menu=file_menu)
         file_menu.add_command(label="Load Spectrum...", command=self.load_spectrum)
         file_menu.add_command(label="Export Current...", command=self.export_spectrum)
+        file_menu.add_separator()
+        
+        # Add Solar System submenu
+        solar_menu = tk.Menu(file_menu, tearoff=0)
+        file_menu.add_cascade(label="Load Solar System Data", menu=solar_menu)
+        solar_menu.add_command(label="Sun (Visible)", command=lambda: self.load_solar_system('sun_visible'))
+        solar_menu.add_command(label="Sun (AM0)", command=lambda: self.load_solar_system('sun_am0'))
+        solar_menu.add_separator()
+        solar_menu.add_command(label="Mercury", command=lambda: self.load_solar_system('mercury'))
+        solar_menu.add_command(label="Venus", command=lambda: self.load_solar_system('venus'))
+        solar_menu.add_command(label="Earth", command=lambda: self.load_solar_system('earth'))
+        solar_menu.add_command(label="Mars", command=lambda: self.load_solar_system('mars'))
+        solar_menu.add_command(label="Jupiter", command=lambda: self.load_solar_system('jupiter'))
+        solar_menu.add_command(label="Saturn", command=lambda: self.load_solar_system('saturn'))
+        solar_menu.add_command(label="Uranus", command=lambda: self.load_solar_system('uranus'))
+        solar_menu.add_command(label="Neptune", command=lambda: self.load_solar_system('neptune'))
+        solar_menu.add_command(label="Moon", command=lambda: self.load_solar_system('moon'))
+        solar_menu.add_separator()
+        solar_menu.add_command(label="Load All Planets", command=self.load_all_planets)
+        
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.root.quit)
         
@@ -124,11 +145,26 @@ class SpecZGUI:
         notebook = ttk.Notebook(right_frame)
         notebook.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # Details tab
+        # Details tab with image
         details_frame = ttk.Frame(notebook)
         notebook.add(details_frame, text="Details")
         
-        self.details_text = scrolledtext.ScrolledText(details_frame, wrap=tk.WORD, height=20)
+        # Split details into image and text
+        details_paned = ttk.PanedWindow(details_frame, orient=tk.VERTICAL)
+        details_paned.pack(fill=tk.BOTH, expand=True)
+        
+        # Image frame
+        image_frame = ttk.Frame(details_paned)
+        details_paned.add(image_frame, weight=1)
+        
+        self.image_label = ttk.Label(image_frame, text="No image available", anchor=tk.CENTER)
+        self.image_label.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # Text frame
+        text_frame = ttk.Frame(details_paned)
+        details_paned.add(text_frame, weight=2)
+        
+        self.details_text = scrolledtext.ScrolledText(text_frame, wrap=tk.WORD, height=15)
         self.details_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
         # Provenance tab
@@ -175,6 +211,43 @@ class SpecZGUI:
                 messagebox.showerror("Error", f"Failed to load spectrum:\n{str(e)}")
                 self.update_status("Error loading spectrum")
     
+    def load_solar_system(self, object_name):
+        """Load pre-packaged solar system spectrum."""
+        try:
+            filename = f'data/solar_system/{object_name}_spectrum.csv' if '_spectrum' not in object_name else f'data/solar_system/{object_name}.csv'
+            self.update_status(f"Loading {object_name}...")
+            spectrum = load_spectrum(filename)
+            
+            # Add to collection
+            name = spectrum.name or object_name.replace('_', ' ').title()
+            self.collection.add_spectrum(name, spectrum)
+            
+            # Update listbox
+            self.spectrum_listbox.insert(tk.END, name)
+            
+            self.update_status(f"Loaded {name}")
+            
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to load {object_name}:\n{str(e)}")
+            self.update_status(f"Error loading {object_name}")
+    
+    def load_all_planets(self):
+        """Load all planetary spectra."""
+        planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
+        self.update_status("Loading all planets...")
+        
+        for planet in planets:
+            try:
+                spectrum = load_spectrum(f'data/solar_system/{planet}_spectrum.csv')
+                name = spectrum.name or planet.title()
+                self.collection.add_spectrum(name, spectrum)
+                self.spectrum_listbox.insert(tk.END, name)
+            except Exception as e:
+                print(f"Could not load {planet}: {e}")
+        
+        self.update_status(f"Loaded {len(planets)} planetary spectra")
+        messagebox.showinfo("Success", f"Loaded {len(planets)} planetary spectra")
+    
     def remove_spectrum(self):
         """Remove selected spectrum."""
         selection = self.spectrum_listbox.curselection()
@@ -202,6 +275,65 @@ class SpecZGUI:
         info = f"Name: {spectrum.name}\n\n"
         info += f"Data Points: {len(spectrum.wavelength)}\n"
         info += f"Wavelength Range: {spectrum.wavelength.min():.2f} - {spectrum.wavelength.max():.2f} {spectrum.wavelength_unit}\n"
+        info += f"Flux Range: {spectrum.flux.min():.2e} - {spectrum.flux.max():.2e} {spectrum.flux_unit}\n\n"
+        
+        info += "Metadata:\n"
+        for key, value in spectrum.metadata.items():
+            info += f"  {key}: {value}\n"
+        
+        self.details_text.insert(1.0, info)
+        
+        # Load and display associated image if available
+        self.display_associated_image(spectrum)
+        
+        # Update provenance
+        self.provenance_text.delete(1.0, tk.END)
+        prov_info = "Provenance History:\n\n"
+        for i, record in enumerate(spectrum.provenance, 1):
+            prov_info += f"{i}. {record['operation']} at {record['timestamp']}\n"
+            for key, value in record['details'].items():
+                prov_info += f"   - {key}: {value}\n"
+            prov_info += "\n"
+        
+        self.provenance_text.insert(1.0, prov_info)
+    
+    def display_associated_image(self, spectrum):
+        """Display image associated with spectrum if available."""
+        try:
+            # Try to find an image for this spectrum
+            name_lower = spectrum.name.lower() if spectrum.name else ""
+            image_path = None
+            
+            # Check for solar system images
+            if 'sun' in name_lower or 'solar' in name_lower:
+                if 'uv' in name_lower:
+                    image_path = Path('data/solar_system/images/sun_uv.png')
+                else:
+                    image_path = Path('data/solar_system/images/sun_visible.png')
+            elif any(planet in name_lower for planet in ['mercury', 'venus', 'earth', 'mars', 
+                                                          'jupiter', 'saturn', 'uranus', 'neptune', 'moon']):
+                for planet in ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'moon']:
+                    if planet in name_lower:
+                        image_path = Path(f'data/solar_system/images/{planet}.png')
+                        break
+            
+            if image_path and image_path.exists():
+                # Load and display image
+                img = Image.open(image_path)
+                # Resize to fit
+                max_size = (400, 300)
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(img)
+                self.image_label.configure(image=photo, text="")
+                self.image_label.image = photo  # Keep a reference
+            else:
+                self.image_label.configure(image='', text=f"No image available\nfor {spectrum.name}")
+                self.image_label.image = None
+                
+        except Exception as e:
+            print(f"Could not load image: {e}")
+            self.image_label.configure(image='', text="Image not available")
+            self.image_label.image = None
         info += f"Flux Range: {spectrum.flux.min():.2e} - {spectrum.flux.max():.2e} {spectrum.flux_unit}\n\n"
         
         info += "Metadata:\n"

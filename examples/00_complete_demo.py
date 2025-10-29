@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from specz import load_spectrum
+from specz.data.registry import get_spectrum_path
 from specz.operations import subtract_spectra, normalize_spectrum, smooth_spectrum
 from specz.converters import convert_units
 from specz.visualization import compare_spectra, plot_spectrum
@@ -23,9 +24,9 @@ print("=" * 80)
 print("\n1. LOADING REAL SOLAR SYSTEM DATA")
 print("-" * 80)
 
-sun = load_spectrum('data/solar_system/sun_visible.csv')
-earth = load_spectrum('data/solar_system/earth_spectrum.csv')
-mars = load_spectrum('data/solar_system/mars_spectrum.csv')
+sun = load_spectrum(get_spectrum_path('Sun', 'visible'))
+earth = load_spectrum(get_spectrum_path('Earth'))
+mars = load_spectrum(get_spectrum_path('Mars'))
 
 print(f"✓ {sun}")
 print(f"✓ {earth}")

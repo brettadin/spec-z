@@ -214,9 +214,18 @@ class SpecZGUI:
     def load_solar_system(self, object_name):
         """Load pre-packaged solar system spectrum."""
         try:
-            filename = f'data/solar_system/{object_name}_spectrum.csv' if '_spectrum' not in object_name else f'data/solar_system/{object_name}.csv'
+            from specz.data.registry import get_spectrum_path
+            
             self.update_status(f"Loading {object_name}...")
-            spectrum = load_spectrum(filename)
+            
+            # Handle Sun with spectrum type
+            if object_name.lower() in ['sun_visible', 'sun_am0']:
+                obj, spec_type = 'Sun', object_name.split('_')[1]
+                filename = get_spectrum_path(obj, spec_type)
+            else:
+                filename = get_spectrum_path(object_name)
+            
+            spectrum = load_spectrum(str(filename))
             
             # Add to collection
             name = spectrum.name or object_name.replace('_', ' ').title()
@@ -233,12 +242,14 @@ class SpecZGUI:
     
     def load_all_planets(self):
         """Load all planetary spectra."""
-        planets = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']
+        from specz.data.registry import get_spectrum_path, list_objects
+        
+        planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
         self.update_status("Loading all planets...")
         
         for planet in planets:
             try:
-                spectrum = load_spectrum(f'data/solar_system/{planet}_spectrum.csv')
+                spectrum = load_spectrum(str(get_spectrum_path(planet)))
                 name = spectrum.name or planet.title()
                 self.collection.add_spectrum(name, spectrum)
                 self.spectrum_listbox.insert(tk.END, name)
@@ -300,6 +311,8 @@ class SpecZGUI:
     def display_associated_image(self, spectrum):
         """Display image associated with spectrum if available."""
         try:
+            from specz.data.registry import get_image_path
+            
             # Try to find an image for this spectrum
             name_lower = spectrum.name.lower() if spectrum.name else ""
             image_path = None
@@ -307,14 +320,14 @@ class SpecZGUI:
             # Check for solar system images
             if 'sun' in name_lower or 'solar' in name_lower:
                 if 'uv' in name_lower:
-                    image_path = Path('data/solar_system/images/sun_uv.png')
+                    image_path = get_image_path('Sun', 'uv')
                 else:
-                    image_path = Path('data/solar_system/images/sun_visible.png')
-            elif any(planet in name_lower for planet in ['mercury', 'venus', 'earth', 'mars', 
-                                                          'jupiter', 'saturn', 'uranus', 'neptune', 'moon']):
-                for planet in ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'moon']:
-                    if planet in name_lower:
-                        image_path = Path(f'data/solar_system/images/{planet}.png')
+                    image_path = get_image_path('Sun', 'visible')
+            else:
+                # Try to match planet names
+                for planet in ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon']:
+                    if planet.lower() in name_lower:
+                        image_path = get_image_path(planet)
                         break
             
             if image_path and image_path.exists():

@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from specz import load_spectrum
+from specz.data.registry import get_spectrum_path, list_objects
 from specz.visualization import compare_spectra, plot_spectrum
 from specz.operations import normalize_spectrum
 
@@ -16,7 +17,7 @@ print("SOLAR SYSTEM SPECTRAL SURVEY")
 print("=" * 70)
 
 # Load solar spectrum
-sun = load_spectrum('data/solar_system/sun_visible.csv')
+sun = load_spectrum(get_spectrum_path('Sun', 'visible'))
 print(f"\n✓ Sun: {sun}")
 print(f"  Temperature: 5778 K (G2V spectral type)")
 print(f"  Range: {sun.wavelength.min():.0f}-{sun.wavelength.max():.0f} {sun.wavelength_unit}")
@@ -27,12 +28,12 @@ planet_names = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranu
 
 print("\nLoading planetary spectra...")
 for planet in planet_names:
-    spec = load_spectrum(f'data/solar_system/{planet.lower()}_spectrum.csv')
+    spec = load_spectrum(get_spectrum_path(planet))
     planets.append(spec)
     print(f"✓ {planet}: {len(spec.wavelength)} data points")
 
 # Also load the Moon
-moon = load_spectrum('data/solar_system/moon_spectrum.csv')
+moon = load_spectrum(get_spectrum_path('Moon'))
 print(f"✓ Moon: {len(moon.wavelength)} data points")
 
 # Plot solar spectrum with Fraunhofer lines

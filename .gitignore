@@ -45,6 +45,10 @@ data/*.dat
 *.html
 *.png
 !data/solar_system/images/*.png
+!data/*/images/*.png
+demo_*.csv
+demo_*.yaml
+demo_*.fits
 
 # Logs
 *.log
